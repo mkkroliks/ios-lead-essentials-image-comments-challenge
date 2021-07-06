@@ -42,36 +42,35 @@ class ImageCommentsMapperTests: XCTestCase {
 	func test_map_deliversItemsOn2xxHTTPResponseWithJSONItems() throws {
 		let item1 = makeItem(
 			id: UUID(),
-			imageURL: URL(string: "http://a-url.com")!)
+			message: "any message",
+			createdAt: (Date(timeIntervalSince1970: 1625604629), "2021-07-06T20:50:29+0000"),
+			authorUsername: "any author"
+		)
 
-		let item2 = makeItem(
-			id: UUID(),
-			description: "a description",
-			location: "a location",
-			imageURL: URL(string: "http://another-url.com")!)
-
-		let json = makeItemsJSON([item1.json, item2.json])
+		let json = makeItemsJSON([item1.json])
 
 		let samples = [200, 201, 280, 299]
 
 		try samples.forEach { code in
-			let result = try ImageCommentsMapper.map(json, from: HTTPURLResponse(statusCode: 200))
+			let result = try ImageCommentsMapper.map(json, from: HTTPURLResponse(statusCode: code))
 
-			XCTAssertEqual(result, [item1.model, item2.model])
+			XCTAssertEqual(result, [item1.model])
 		}
 	}
 
 	// MARK: - Helpers
 
-	private func makeItem(id: UUID, description: String? = nil, location: String? = nil, imageURL: URL) -> (model: FeedImage, json: [String: Any]) {
-		let item = FeedImage(id: id, description: description, location: location, url: imageURL)
+	private func makeItem(id: UUID, message: String, createdAt: (date: Date, iso8601: String), authorUsername: String) -> (model: ImageComment, json: [String: Any]) {
+		let item = ImageComment(id: id, message: message, createdAt: createdAt.date, authorUserName: authorUsername)
 
-		let json = [
+		let json: [String: Any] = [
 			"id": id.uuidString,
-			"description": description,
-			"location": location,
-			"image": imageURL.absoluteString
-		].compactMapValues { $0 }
+			"message": message,
+			"created_at": createdAt.iso8601,
+			"author": [
+				"username": authorUsername
+			]
+		]
 
 		return (item, json)
 	}

@@ -7,8 +7,8 @@ import EssentialFeed
 
 class ImageCommentsLocalizationTests: XCTestCase {
 	func test_localizedStrings_haveKeysAndValuesForAllSupportedLocalizations() {
-		let table = "Feed"
-		let bundle = Bundle(for: FeedPresenter.self)
+		let table = "Comments"
+		let bundle = Bundle(for: ImageCommentsPresenter.self)
 
 		assertLocalizedKeyAndValuesExist(in: bundle, table)
 	}

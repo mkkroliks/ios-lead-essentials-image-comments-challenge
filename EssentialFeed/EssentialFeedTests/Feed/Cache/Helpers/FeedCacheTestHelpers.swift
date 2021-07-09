@@ -15,6 +15,15 @@ func uniqueImageFeed() -> (models: [FeedImage], local: [LocalFeedImage]) {
 	return (models, local)
 }
 
+func uniqueComments() -> [ImageComment] {
+	let uniqueComments = [uniqueComment(), uniqueComment()]
+	return uniqueComments
+}
+
+func uniqueComment() -> ImageComment {
+	ImageComment(id: UUID(), message: "any", createdAt: Date(), authorUserName: "any")
+}
+
 extension Date {
 	func minusFeedCacheMaxAge() -> Date {
 		return adding(days: -feedCacheMaxAgeInDays)

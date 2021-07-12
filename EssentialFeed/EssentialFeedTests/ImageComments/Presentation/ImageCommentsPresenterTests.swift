@@ -15,8 +15,8 @@ class ImageCommentsPresenterTests: XCTestCase {
 			ImageComment(id: UUID(), message: "first message", createdAt: Date().adding(days: -1), authorUserName: "first author name"),
 			ImageComment(id: UUID(), message: "second message", createdAt: Date().adding(days: -15), authorUserName: "second author name")
 		]
-
-		let viewModel = ImageCommentsPresenter.map(comments)
+        let locale = Locale(identifier: "en_US_POSIX")
+        let viewModel = ImageCommentsPresenter.map(comments, locale: locale)
 
 		XCTAssertEqual(
 			viewModel.comments,

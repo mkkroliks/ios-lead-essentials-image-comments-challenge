@@ -4,6 +4,18 @@
 
 import Foundation
 
+public struct ImageCommentViewModel: Equatable {
+	public let message: String
+	public let date: String
+	public let authorUserName: String
+
+	public init(message: String, date: String, authorUserName: String) {
+		self.message = message
+		self.date = date
+		self.authorUserName = authorUserName
+	}
+}
+
 public final class ImageCommentsPresenter {
 	public static var title: String {
 		NSLocalizedString(
@@ -14,6 +26,9 @@ public final class ImageCommentsPresenter {
 	}
 
 	public static func map(_ comments: [ImageComment]) -> ImageCommentsViewModel {
-		ImageCommentsViewModel(comments: comments)
+		let formatter = RelativeDateTimeFormatter()
+		return ImageCommentsViewModel(comments: comments.map({ comment in
+			ImageCommentViewModel(message: comment.message, date: formatter.localizedString(for: comment.createdAt, relativeTo: Date()), authorUserName: comment.authorUserName)
+		}))
 	}
 }

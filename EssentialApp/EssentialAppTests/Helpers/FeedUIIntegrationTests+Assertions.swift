@@ -40,35 +40,3 @@ extension FeedUIIntegrationTests {
 		RunLoop.current.run(until: Date())
 	}
 }
-
-extension ImageCommentsUIIntegrationTests {
-	func assertThat(_ sut: ListViewController, isRendering feed: [ImageComment], file: StaticString = #filePath, line: UInt = #line) {
-		sut.view.enforceLayoutCycle()
-
-		guard sut.numberOfRenderedFeedImageViews() == feed.count else {
-			return XCTFail("Expected \(feed.count) images, got \(sut.numberOfRenderedFeedImageViews()) instead.", file: file, line: line)
-		}
-
-		feed.enumerated().forEach { index, image in
-			assertThat(sut, hasViewConfiguredFor: image, at: index, file: file, line: line)
-		}
-
-		executeRunLoopToCleanUpReferences()
-	}
-
-	func assertThat(_ sut: ListViewController, hasViewConfiguredFor image: ImageComment, at index: Int, file: StaticString = #filePath, line: UInt = #line) {
-		let view = sut.feedImageView(at: index)
-
-		guard let cell = view as? ImageCommentCell else {
-			return XCTFail("Expected \(ImageCommentCell.self) instance, got \(String(describing: view)) instead", file: file, line: line)
-		}
-
-		XCTAssertEqual(cell.messageLabel.text, image.message, "Expected `messageLabel` to be \(image.message) for image comment view at index (\(index))", file: file, line: line)
-
-		XCTAssertEqual(cell.usernameLabel.text, image.authorUserName, "Expected `messageLabel` to be \(image.message) for image comment view at index (\(index))", file: file, line: line)
-	}
-
-	private func executeRunLoopToCleanUpReferences() {
-		RunLoop.current.run(until: Date())
-	}
-}

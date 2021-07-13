@@ -12,10 +12,10 @@ public final class ImageCommentsUIComposer {
 
 	private typealias ImageCommentsPresentationAdapter = LoadResourcePresentationAdapter<[ImageComment], ImageCommentsViewAdapter>
 
-	public static func feedComposedWith(
-		feedLoader: @escaping () -> AnyPublisher<[ImageComment], Error>
+	public static func imageCommentsComposedWith(
+		imageCommentsLoader: @escaping () -> AnyPublisher<[ImageComment], Error>
 	) -> ListViewController {
-		let presentationAdapter = ImageCommentsPresentationAdapter(loader: feedLoader)
+		let presentationAdapter = ImageCommentsPresentationAdapter(loader: imageCommentsLoader)
 
 		let feedController = makeImageCommentsViewController(title: ImageCommentsPresenter.title)
 		feedController.onRefresh = presentationAdapter.loadResource

@@ -13,8 +13,8 @@ class ImageCommentsSnapshotTests: XCTestCase {
 		sut.display(imageCommentsWithContent())
 
 		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light)), named: "IMAGE_COMMENTS_WITH_CONTENT_light")
-        assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "IMAGE_COMMENTS_WITH_CONTENT_dark")
-        assert(snapshot: sut.snapshot(for: .iPhone8(style: .light, contentSize: .extraExtraExtraLarge)), named: "IMAGE_COMMENTS_WITH_CONTENT_light_extraExtraExtraLarge")
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .dark)), named: "IMAGE_COMMENTS_WITH_CONTENT_dark")
+		assert(snapshot: sut.snapshot(for: .iPhone8(style: .light, contentSize: .extraExtraExtraLarge)), named: "IMAGE_COMMENTS_WITH_CONTENT_light_extraExtraExtraLarge")
 	}
 
 	// MARK: - Helpers
@@ -41,16 +41,16 @@ class ImageCommentsSnapshotTests: XCTestCase {
 					)
 				)
 			),
-            CellController(
-                id: UUID(),
-                ImageCommentCellController(
-                    viewModel: ImageCommentViewModel(
-                        message: "Second Very Very Very Very Very Very Very Very Very Very Very Very Very Very Very Very Very Very Very Very Very Very Very Very Very Very Very Very Very Very Very Very Very Very Very Very Long Message",
-                        date: "10 days ago",
-                        authorUserName: "Second very very very long username"
-                    )
-                )
-            )
+			CellController(
+				id: UUID(),
+				ImageCommentCellController(
+					viewModel: ImageCommentViewModel(
+						message: "Second Very Very Very Very Very Very Very Very Very Very Very Very Very Very Very Very Very Very Very Very Very Very Very Very Very Very Very Very Very Very Very Very Very Very Very Very Long Message",
+						date: "10 days ago",
+						authorUserName: "Second very very very long username"
+					)
+				)
+			)
 		]
 	}
 }

@@ -64,3 +64,30 @@ extension FeedUIIntegrationTests {
 		}
 	}
 }
+
+extension ImageCommentsUIIntegrationTests {
+	class LoaderSpy {
+		// MARK: - FeedLoader
+
+		private var imageCommentsRequests = [PassthroughSubject<[ImageComment], Error>]()
+
+		var loadFeedCallCount: Int {
+			return imageCommentsRequests.count
+		}
+
+		func loadPublisher() -> AnyPublisher<[ImageComment], Error> {
+			let publisher = PassthroughSubject<[ImageComment], Error>()
+			imageCommentsRequests.append(publisher)
+			return publisher.eraseToAnyPublisher()
+		}
+
+		func completeFeedLoading(with feed: [ImageComment] = [], at index: Int = 0) {
+			imageCommentsRequests[index].send(feed)
+		}
+
+		func completeFeedLoadingWithError(at index: Int = 0) {
+			let error = NSError(domain: "an error", code: 0)
+			imageCommentsRequests[index].send(completion: .failure(error))
+		}
+	}
+}

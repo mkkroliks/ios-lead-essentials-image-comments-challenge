@@ -14,7 +14,7 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 
 		sut.loadViewIfNeeded()
 
-		XCTAssertEqual(sut.title, feedTitle)
+		XCTAssertEqual(sut.title, ImageCommentsPresenter.title)
 	}
 
 	func test_loadFeedActions_requestFeedFromLoader() {
@@ -48,31 +48,29 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 	}
 
 	func test_loadFeedCompletion_rendersSuccessfullyLoadedFeed() {
-		let image0 = makeImage(description: "a description", location: "a location")
-		let image1 = makeImage(description: nil, location: "another location")
-		let image2 = makeImage(description: "another description", location: nil)
-		let image3 = makeImage(description: nil, location: nil)
+		let imageComment0 = makeComment(message: "first message", createdAt: Date(), authorUserName: "first username")
+		let imageComment1 = makeComment(message: "second message", createdAt: Date(), authorUserName: "second username")
 		let (sut, loader) = makeSUT()
 
 		sut.loadViewIfNeeded()
 		assertThat(sut, isRendering: [])
 
-		loader.completeFeedLoading(with: [image0], at: 0)
-		assertThat(sut, isRendering: [image0])
+		loader.completeFeedLoading(with: [imageComment0], at: 0)
+		assertThat(sut, isRendering: [imageComment0])
 
 		sut.simulateUserInitiatedReload()
-		loader.completeFeedLoading(with: [image0, image1, image2, image3], at: 1)
-		assertThat(sut, isRendering: [image0, image1, image2, image3])
+		loader.completeFeedLoading(with: [imageComment0, imageComment1], at: 1)
+		assertThat(sut, isRendering: [imageComment0, imageComment1])
 	}
 
 	func test_loadFeedCompletion_rendersSuccessfullyLoadedEmptyFeedAfterNonEmptyFeed() {
-		let image0 = makeImage()
-		let image1 = makeImage()
+		let imageComment0 = makeComment(message: "first message", createdAt: Date(), authorUserName: "first username")
+		let imageComment1 = makeComment(message: "second message", createdAt: Date(), authorUserName: "second username")
 		let (sut, loader) = makeSUT()
 
 		sut.loadViewIfNeeded()
-		loader.completeFeedLoading(with: [image0, image1], at: 0)
-		assertThat(sut, isRendering: [image0, image1])
+		loader.completeFeedLoading(with: [imageComment0, imageComment1], at: 0)
+		assertThat(sut, isRendering: [imageComment0, imageComment1])
 
 		sut.simulateUserInitiatedReload()
 		loader.completeFeedLoading(with: [], at: 1)
@@ -80,16 +78,16 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 	}
 
 	func test_loadFeedCompletion_doesNotAlterCurrentRenderingStateOnError() {
-		let image0 = makeImage()
+		let imageComment0 = makeComment(message: "first message", createdAt: Date(), authorUserName: "first username")
 		let (sut, loader) = makeSUT()
 
 		sut.loadViewIfNeeded()
-		loader.completeFeedLoading(with: [image0], at: 0)
-		assertThat(sut, isRendering: [image0])
+		loader.completeFeedLoading(with: [imageComment0], at: 0)
+		assertThat(sut, isRendering: [imageComment0])
 
 		sut.simulateUserInitiatedReload()
 		loader.completeFeedLoadingWithError(at: 1)
-		assertThat(sut, isRendering: [image0])
+		assertThat(sut, isRendering: [imageComment0])
 	}
 
 	func test_loadFeedCompletion_dispatchesFromBackgroundToMainThread() {
@@ -130,17 +128,6 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 		XCTAssertEqual(sut.errorMessage, nil)
 	}
 
-	// MARK: - Image View Tests
-
-	func test_feedImageView_loadsImageURLWhenVisible() {
-		let image0 = makeImage(url: URL(string: "http://url-0.com")!)
-		let image1 = makeImage(url: URL(string: "http://url-1.com")!)
-		let (sut, loader) = makeSUT()
-
-		sut.loadViewIfNeeded()
-		loader.completeFeedLoading(with: [image0, image1])
-
-
 	// MARK: - Helpers
 
 	private func makeSUT(
@@ -149,21 +136,13 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 		line: UInt = #line
 	) -> (sut: ListViewController, loader: LoaderSpy) {
 		let loader = LoaderSpy()
-		let sut = FeedUIComposer.feedComposedWith(
-			feedLoader: loader.loadPublisher,
-			imageLoader: loader.loadImageDataPublisher,
-			selection: selection
-		)
+		let sut = ImageCommentsUIComposer.feedComposedWith(feedLoader: loader.loadPublisher)
 		trackForMemoryLeaks(loader, file: file, line: line)
 		trackForMemoryLeaks(sut, file: file, line: line)
 		return (sut, loader)
 	}
 
-	private func makeImage(description: String? = nil, location: String? = nil, url: URL = URL(string: "http://any-url.com")!) -> FeedImage {
-		return FeedImage(id: UUID(), description: description, location: location, url: url)
-	}
-
-	private func anyImageData() -> Data {
-		return UIImage.make(withColor: .red).pngData()!
+	private func makeComment(id: UUID = UUID(), message: String = "any message", createdAt: Date = Date(), authorUserName: String = "any username") -> ImageComment {
+		return ImageComment(id: id, message: message, createdAt: createdAt, authorUserName: authorUserName)
 	}
 }

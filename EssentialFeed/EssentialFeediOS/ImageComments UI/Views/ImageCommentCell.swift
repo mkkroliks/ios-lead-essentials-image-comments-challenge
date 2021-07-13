@@ -5,7 +5,7 @@
 import UIKit
 
 public final class ImageCommentCell: UITableViewCell {
-	@IBOutlet weak var messageLabel: UILabel!
-	@IBOutlet weak var usernameLabel: UILabel!
-	@IBOutlet weak var dateLabel: UILabel!
+	@IBOutlet private(set) public weak var messageLabel: UILabel!
+	@IBOutlet private(set) public weak var usernameLabel: UILabel!
+	@IBOutlet private(set) public weak var dateLabel: UILabel!
 }

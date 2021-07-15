@@ -7,6 +7,7 @@ import UIKit
 import EssentialApp
 import EssentialFeed
 import EssentialFeediOS
+import Combine
 
 class ImageCommentsUIIntegrationTests: XCTestCase {
 	func test_imageCommentsView_hasTitle() {
@@ -126,6 +127,29 @@ class ImageCommentsUIIntegrationTests: XCTestCase {
 
 		sut.simulateErrorViewTap()
 		XCTAssertEqual(sut.errorMessage, nil)
+	}
+
+	func test_deinit_cancelCommentsLoading() {
+		var cancelCallCount = 0
+
+		var sut: ListViewController?
+		autoreleasepool {
+			sut = ImageCommentsUIComposer.imageCommentsComposedWith(imageCommentsLoader: {
+				PassthroughSubject<[ImageComment], Error>()
+					.handleEvents(receiveCancel: {
+						cancelCallCount += 1
+					})
+					.eraseToAnyPublisher()
+			})
+
+			sut?.loadViewIfNeeded()
+		}
+
+		XCTAssertEqual(cancelCallCount, 0)
+
+		sut = nil
+
+		XCTAssertEqual(cancelCallCount, 1)
 	}
 
 	// MARK: - Helpers

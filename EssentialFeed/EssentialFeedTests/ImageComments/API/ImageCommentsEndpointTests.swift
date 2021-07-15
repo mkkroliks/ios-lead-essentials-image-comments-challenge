@@ -13,7 +13,7 @@ class ImageCommentsEndpointTests: XCTestCase {
 
 		sampleCommentsIds.forEach { imageId in
 			let received = ImageCommentsEndpoint.get.url(baseURL: baseURL, imageId: imageId)
-			let expected = URL(string: "http://base-url.com/image/\(imageId)/comments")!
+			let expected = URL(string: "http://base-url.com/v1/image/\(imageId)/comments")!
 
 			XCTAssertEqual(received, expected)
 		}

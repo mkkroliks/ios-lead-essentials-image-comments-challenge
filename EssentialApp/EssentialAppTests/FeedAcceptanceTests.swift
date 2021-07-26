@@ -57,7 +57,7 @@ class FeedAcceptanceTests: XCTestCase {
 		feed.simulateTapOnFeedImage(at: 0)
 		RunLoop.current.run(until: Date())
 
-		let commentsVC = ((feed.parent as? UINavigationController)?.topViewController) as? ListViewController
+		let commentsVC = feed.navigationController?.topViewController as? ListViewController
 
 		XCTAssertNotNil(commentsVC)
 		XCTAssertEqual(commentsVC?.numberOfRenderedImageCommentsViews(), 1)

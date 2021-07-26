@@ -7,7 +7,6 @@ import EssentialFeed
 
 public final class ImageCommentCellController: NSObject {
 	private let viewModel: ImageCommentViewModel
-	private var cell: ImageCommentCell?
 
 	public init(viewModel: ImageCommentViewModel) {
 		self.viewModel = viewModel
@@ -20,10 +19,10 @@ extension ImageCommentCellController: UITableViewDataSource {
 	}
 
 	public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		cell = tableView.dequeueReusableCell()
-		cell?.messageLabel.text = viewModel.message
-		cell?.dateLabel.text = viewModel.date
-		cell?.usernameLabel.text = viewModel.authorUserName
-		return cell!
+		let cell: ImageCommentCell = tableView.dequeueReusableCell()
+		cell.messageLabel.text = viewModel.message
+		cell.dateLabel.text = viewModel.date
+		cell.usernameLabel.text = viewModel.authorUserName
+		return cell
 	}
 }
